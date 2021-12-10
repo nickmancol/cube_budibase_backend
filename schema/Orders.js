@@ -9,14 +9,39 @@ cube(`Orders`, {
   joins: {
     
   },
+
+  segments: {
+    Consumer: {
+      sql: `${CUBE}.segment = 'Consumer'`
+    },
+    Corporate: {
+      sql: `${CUBE}.segment = 'Corporate'`
+    },
+    HomeOffice: {
+      sql: `${CUBE}.segment = 'Home Office'`
+    },
+    All:{
+      sql: ``
+    }
+  },
   
   measures: {
     count: {
       type: `count`,
-      drillMembers: [orderId, customerId, customerName, country, city, productId, productName, orderDate, shipDate]
+      drillMembers: [orderId, customerId, customerName, country, city, productId, productName, orderDate, shipDate, category, subCategory]
+    },
+
+    uniqueOrders: {
+      sql: `order_id`,
+      type: 'countDistinct',
+    },
+
+    customers: {
+      sql: 'customer_id',
+      type: `countDistinct`
     },
     
-    quantity: {
+    items: {
       sql: `quantity`,
       type: `sum`
     },
@@ -24,7 +49,17 @@ cube(`Orders`, {
     discount: {
       sql: `discount`,
       type: `sum`
-    }
+    },
+
+    sales: {
+      sql: `sales`,
+      type: `sum`
+    },
+
+    profit: {
+      sql: `profit`,
+      type: `sum`
+    },
   },
   
   dimensions: {
@@ -37,19 +72,14 @@ cube(`Orders`, {
       sql: `ship_mode`,
       type: `string`
     },
-    
+
     customerId: {
       sql: `customer_id`,
       type: `string`
     },
-    
+        
     customerName: {
       sql: `customer_name`,
-      type: `string`
-    },
-    
-    segment: {
-      sql: `segment`,
       type: `string`
     },
     
